@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Salas - Poli-Salas</title>
+</head>
+<body>
+    <header>
+        <h1>Poli-Salas</h1>
+        <nav>
+            <a href="{% url 'solicitar_reserva' %}">Solicitar reserva</a>
+            <a href="{% url 'minhas_reservas' %}">Minhas reservas</a>
+            {% if request.user.is_authenticated and request.user.is_funcionario %}
+                <a href="{% url 'cadastrar_sala' %}">+ Nova sala</a>
+                <a href="{% url 'gerenciar_reservas' %}">Gerenciar reservas</a>
+            {% endif %}
+            <form method="post" action="{% url 'logout' %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit">Sair</button>
+            </form>
+        </nav>
+    </header>
+
+    <main>
+        <h2>Salas disponíveis</h2>
+        <ul>
+            {% for sala in salas %}
+                <li>
+                    {{ sala.nome }} - {{ sala.departamento }} (Capacidade: {{ sala.capacidade }})
+                    <a href="{% url 'calendario_sala' sala.id %}">Ver calendário</a>
+                </li>
+            {% empty %}
+                <li>Nenhuma sala cadastrada ainda.</li>
+            {% endfor %}
+        </ul>
+    </main>
+</body>
+</html>

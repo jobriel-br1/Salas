@@ -1,0 +1,26 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Sala - Poli-Salas</title>
+</head>
+<body>
+    <header>
+        <h1>Cadastrar Nova Sala</h1>
+        <nav>
+            <a href="{% url 'lista_salas' %}">Voltar às salas</a>
+            <a href="{% url 'solicitar_reserva' %}">Solicitar reserva</a>
+        </nav>
+    </header>
+
+    <main>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Salvar sala</button>
+        </form>
+    </main>
+</body>
+</html>

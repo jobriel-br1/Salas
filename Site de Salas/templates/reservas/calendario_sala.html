@@ -1,0 +1,99 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendário - {{ sala.nome }} | Poli-Salas</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .top-bar { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+        .nav-links a { margin-right: 12px; }
+        .legenda { display: flex; gap: 16px; margin-bottom: 14px; font-size: 14px; }
+        .badge { display: inline-block; padding: 2px 8px; border-radius: 4px; font-weight: bold; }
+        .vago { background-color: #e8f5e9; color: #1b5e20; }
+        .bloqueado { background-color: #ffebee; color: #b71c1c; }
+        .aprovada { background-color: #e3f2fd; color: #0d47a1; }
+        .pendente { background-color: #fff8e1; color: #e65100; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td { border: 1px solid #ccc; padding: 8px; vertical-align: top; font-size: 13px; }
+        th { background-color: #f4f6f8; text-align: center; }
+        td.hora { font-weight: bold; background-color: #fafafa; white-space: nowrap; width: 110px; }
+        td.vago { background-color: #f1f8e9; }
+        td.bloqueado { background-color: #fdecea; }
+        td.aprovada { background-color: #e8f4fd; }
+        td.pendente { background-color: #fffde7; }
+        .estado-titulo { font-weight: bold; display: block; margin-bottom: 6px; }
+        .reserva-item { border-top: 1px dashed rgba(0, 0, 0, 0.15); padding-top: 6px; margin-top: 6px; }
+        .reserva-item:first-of-type { border-top: none; padding-top: 0; margin-top: 0; }
+        .detalhe { font-size: 12px; color: #333; }
+    </style>
+</head>
+<body>
+    <div class="top-bar">
+        <div>
+            <h1>Calendário — {{ sala.nome }} ({{ sala.departamento }})</h1>
+            <p>
+                Capacidade: {{ sala.capacidade }} pessoas |
+                Semana: {{ inicio_semana|date:"d/m/Y" }} a {{ fim_semana|date:"d/m/Y" }}
+            </p>
+        </div>
+        <div class="nav-links">
+            <a href="?semana={{ semana_anterior }}">← Semana anterior</a>
+            <a href="?semana={{ semana_seguinte }}">Próxima semana →</a>
+            <a href="{% url 'solicitar_reserva' %}">Solicitar reserva</a>
+            <a href="{% url 'lista_salas' %}">Voltar às salas</a>
+        </div>
+    </div>
+
+    <div class="legenda">
+        <span><span class="badge vago">Vago</span> Disponível</span>
+        <span><span class="badge aprovada">Reservado (Aprovado)</span> Reserva confirmada</span>
+        <span><span class="badge pendente">Pendente</span> Aguardando avaliação</span>
+        <span><span class="badge bloqueado">Bloqueado</span> Indisponível pela administração</span>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Horário</th>
+                {% for dia in dias_semana %}
+                    <th>{{ dia|date:"D" }}<br>{{ dia|date:"d/m" }}</th>
+                {% endfor %}
+            </tr>
+        </thead>
+        <tbody>
+            {% for linha in linhas %}
+                <tr>
+                    <td class="hora">{{ linha.label }}</td>
+                    {% for celula in linha.celulas %}
+                        <td class="{{ celula.estado }}">
+                            <span class="estado-titulo">{{ celula.rotulo_estado }}</span>
+                            {% if celula.reservas %}
+                                {% for item in celula.reservas %}
+                                    <div class="reserva-item">
+                                        <div class="detalhe"><strong>{{ item.atividade }}</strong> ({{ item.status_display }})</div>
+                                        <div class="detalhe">{{ item.solicitante }}</div>
+                                        <div class="detalhe">{{ item.intervalo }}</div>
+
+                                        {% if request.user.is_staff and item.id %}
+                                            <form method="post" action="{% url 'remover_reserva_funcionario' item.id %}" style="margin-top: 4px;">
+                                                {% csrf_token %}
+                                                <button type="submit" onclick="return confirm('Remover este evento permanentemente?');">
+                                                    Remover
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <div class="detalhe">Livre</div>
+                            {% endif %}
+                        </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</body>
+</html>

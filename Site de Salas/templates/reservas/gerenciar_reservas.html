@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Gerenciar Reservas — Poli-Salas</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 24px; background: #f7f8fa; color: #222; }
+    h2 { margin-top: 28px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 12px; background: #fff; }
+    th, td { border: 1px solid #ccc; padding: 10px; text-align: left; }
+    th { background: #f4f4f4; }
+    .acoes form { display: inline-block; margin-right: 6px; margin-bottom: 4px; }
+    .btn-aprovar { background: #2e7d32; color: #fff; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; }
+    .btn-rejeitar { background: #c62828; color: #fff; border: none; padding: 6px 12px; cursor: pointer; border-radius: 4px; }
+    .btn-cancelar { background: #fff; color: #b71c1c; border: 1px solid #c62828; padding: 6px 10px; cursor: pointer; border-radius: 4px; }
+    .btn-remover { background: #334155; color: #fff; border: none; padding: 6px 10px; cursor: pointer; border-radius: 4px; }
+    .btn-bloquear { background: #1565c0; color: #fff; border: none; padding: 8px 14px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+    .msg { padding: 10px; margin-bottom: 12px; background: #eef6ff; border-left: 4px solid #1976d2; }
+    .box-bloqueio { background: #fff; border: 1px solid #ccc; border-radius: 6px; padding: 14px 16px; margin-top: 16px; }
+    .campo { display: inline-block; margin-right: 14px; margin-bottom: 10px; }
+    .campo input, .campo select { padding: 5px 8px; }
+  </style>
+</head>
+<body>
+  <h1>Gerenciar Reservas</h1>
+  <p>
+    <a href="{% url 'lista_salas' %}">Salas</a> |
+    <a href="{% url 'minhas_reservas' %}">Minhas Reservas</a>
+  </p>
+
+  {% if messages %}
+    {% for message in messages %}
+      <div class="msg">{{ message }}</div>
+    {% endfor %}
+  {% endif %}
+
+  <div class="box-bloqueio">
+    <h2 style="margin-top: 0;">Bloquear Sala / Horário</h2>
+    <form method="post" action="{% url 'bloquear_horario' %}">
+      {% csrf_token %}
+      <div class="campo">
+        <label for="id_sala">Sala:</label>
+        <select id="id_sala" name="sala" required>
+          {% for sala in salas %}
+            <option value="{{ sala.id }}">{{ sala.nome }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="campo">
+        <label for="id_data">Data:</label>
+        <input id="id_data" type="date" name="data" required>
+      </div>
+      <div class="campo">
+        <label for="id_hora_inicio">Início:</label>
+        <input id="id_hora_inicio" type="time" name="hora_inicio" required>
+      </div>
+      <div class="campo">
+        <label for="id_hora_fim">Fim:</label>
+        <input id="id_hora_fim" type="time" name="hora_fim" required>
+      </div>
+      <div class="campo">
+        <label for="id_atividade">Motivo:</label>
+        <input id="id_atividade" type="text" name="atividade" placeholder="Ex: Manutenção ou prova">
+      </div>
+      <div class="campo">
+        <label>
+          <input type="checkbox" name="recusar_conflitos" checked>
+          Recusar pendentes no mesmo horário
+        </label>
+      </div>
+      <button type="submit" class="btn-bloquear">Bloquear horário</button>
+    </form>
+  </div>
+
+  <h2>Reservas Pendentes de Aprovação</h2>
+  {% if reservas %}
+    <table>
+      <thead>
+        <tr>
+          <th>Solicitante</th>
+          <th>Função</th>
+          <th>Atividade</th>
+          <th>Sala</th>
+          <th>Data</th>
+          <th>Horário</th>
+          <th>Tipo</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for reserva in reservas %}
+          <tr>
+            <td>{{ reserva.solicitante.get_full_name|default:reserva.solicitante.username }}</td>
+            <td>{{ reserva.solicitante.get_funcao_display|default:reserva.solicitante.funcao }}</td>
+            <td>{{ reserva.atividade }}</td>
+            <td>{{ reserva.sala.nome }}</td>
+            <td>{{ reserva.data|date:"d/m/Y" }}</td>
+            <td>{{ reserva.hora_inicio|time:"H:i" }} às {{ reserva.hora_fim|time:"H:i" }}</td>
+            <td>{{ reserva.get_tipo_reserva_display }}</td>
+            <td class="acoes">
+              <form method="post" action="{% url 'decidir_reserva' reserva.id 'aprovar' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-aprovar">Aprovar</button>
+              </form>
+              <form method="post" action="{% url 'decidir_reserva' reserva.id 'rejeitar' %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-rejeitar">Rejeitar</button>
+              </form>
+              <form method="post" action="{% url 'cancelar_reserva_funcionario' reserva.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-cancelar">Cancelar</button>
+              </form>
+              <form method="post" action="{% url 'remover_reserva_funcionario' reserva.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-remover">Remover</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>Não há reservas pendentes no momento.</p>
+  {% endif %}
+
+  {% if reservas_gerenciaveis %}
+    <h2>Reservas Aprovadas, Bloqueadas e Canceladas</h2>
+    <table>
+      <thead>
+        <tr>
+          <th>Solicitante</th>
+          <th>Atividade</th>
+          <th>Sala</th>
+          <th>Data</th>
+          <th>Horário</th>
+          <th>Status</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in reservas_gerenciaveis %}
+          <tr>
+            <td>{{ item.solicitante.get_full_name|default:item.solicitante.username }}</td>
+            <td>{{ item.atividade }}</td>
+            <td>{{ item.sala.nome }}</td>
+            <td>{{ item.data|date:"d/m/Y" }}</td>
+            <td>{{ item.hora_inicio|time:"H:i" }} às {{ item.hora_fim|time:"H:i" }}</td>
+            <td>{{ item.get_status_display }}</td>
+            <td class="acoes">
+              {% if item.status != 'CANCELADA' %}
+                <form method="post" action="{% url 'cancelar_reserva_funcionario' item.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-cancelar">Cancelar</button>
+                </form>
+              {% endif %}
+              <form method="post" action="{% url 'remover_reserva_funcionario' item.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn-remover">Remover</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+</body>
+</html>

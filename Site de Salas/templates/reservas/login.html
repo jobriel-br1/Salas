@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Poli-Salas</title>
+    <link rel="stylesheet" href="{% static 'style-login.css' %}">
+</head>
+
+<body>
+    <main class="container-login">
+
+        <header class="login-header">
+            <h1>Poli-Salas</h1>
+            <p>Acesse sua conta</p>
+        </header>
+
+        <form class="form-login" method="post">
+            {% csrf_token %}
+            {% if form.errors %}
+                <p class="erro-login">NUSP ou senha inválidos. Tente novamente.</p>
+            {% endif %}
+
+            <div class="campo">
+                <label for="id_username">NUSP</label>
+                <input
+                    type="text"
+                    name="username"
+                    id="id_username"
+                    placeholder="Digite seu NUSP"
+                    autocomplete="username"
+                    required
+                >
+            </div>
+
+            <div class="campo">
+                <label for="id_password">Senha</label>
+                <input
+                    type="password"
+                    name="password"
+                    id="id_password"
+                    placeholder="Digite sua senha"
+                    autocomplete="current-password"
+                    required
+                >
+            </div>
+
+            <button type="submit" class="botao-login">
+                Entrar
+            </button>
+
+            <nav class="opcoes" aria-label="Opções da conta">
+                <a href="#">Esqueci a senha</a>
+                <a href="{% url 'cadastro' %}">Criar conta / Vincular USP</a>
+            </nav>
+        </form>
+
+    </main>
+</body>
+
+</html>

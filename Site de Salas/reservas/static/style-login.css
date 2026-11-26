@@ -1,0 +1,218 @@
+:root {
+    --cor-primaria: #29403F;
+    --cor-secundaria: #D9CCB7;
+    --cor-fundo: #F5F2ED;
+    --cor-superficie: #FFFFFF;
+    --cor-texto: #343A38;
+    --cor-texto-claro: #FFFFFF;
+    --cor-hover: #365553;
+    --cor-borda: #D8D8D3;
+}
+
+/* =========================
+   2. CONFIGURAÇÕES GERAIS
+   ========================= */
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+    width: 100%;
+    min-height: 100%;
+    margin: 0;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 24px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+}
+
+/* =========================
+   3. CARTÃO DE LOGIN
+   ========================= */
+
+.container-login {
+    width: 100%;
+    max-width: 400px;
+    padding: 36px;
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto-claro);
+
+    border-radius: 14px;
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+/* =========================
+   4. CABEÇALHO
+   ========================= */
+
+.login-header {
+    margin-bottom: 28px;
+    text-align: center;
+}
+
+.login-header h1 {
+    margin: 0 0 8px;
+    font-size: 28px;
+    font-weight: 700;
+}
+
+.login-header p {
+    margin: 0;
+    color: var(--cor-secundaria);
+    font-size: 15px;
+}
+
+/* =========================
+   5. FORMULÁRIO
+   ========================= */
+
+.form-login {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.campo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo label {
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.campo input {
+    width: 100%;
+    min-width: 0;
+    height: 44px;
+    padding: 0 12px;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+
+    background-color: var(--cor-superficie);
+    color: var(--cor-texto);
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.campo input::placeholder {
+    color: #777777;
+}
+
+.campo input:focus {
+    border-color: var(--cor-secundaria);
+    box-shadow: 0 0 0 3px rgba(217, 204, 183, 0.3);
+}
+
+/* =========================
+   6. BOTÃO ENTRAR
+   ========================= */
+
+.botao-login {
+    width: 100%;
+    min-height: 44px;
+    padding: 12px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: var(--cor-secundaria);
+    color: var(--cor-primaria);
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
+
+.botao-login:hover {
+    background-color: var(--cor-hover);
+    color: var(--cor-texto-claro);
+}
+
+.botao-login:active {
+    transform: scale(0.98);
+}
+
+/* =========================
+   7. LINKS AUXILIARES
+   ========================= */
+
+.opcoes {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+}
+
+.opcoes a {
+    color: var(--cor-secundaria);
+    font-size: 14px;
+    text-align: center;
+    text-decoration: none;
+
+    transition: color 0.2s;
+}
+
+.opcoes a:hover {
+    color: var(--cor-texto-claro);
+    text-decoration: underline;
+}
+
+/* =========================
+   8. ACESSIBILIDADE
+   ========================= */
+
+.botao-login:focus-visible,
+.opcoes a:focus-visible {
+    outline: 2px solid var(--cor-texto-claro);
+    outline-offset: 4px;
+}
+
+/* =========================
+   9. RESPONSIVIDADE
+   ========================= */
+
+@media (max-width: 420px) {
+    body {
+        padding: 16px;
+    }
+
+    .container-login {
+        padding: 28px 22px;
+    }
+
+    .login-header h1 {
+        font-size: 25px;
+    }
+}

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Minhas Reservas — Poli-Salas</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 24px;
+      background: #f7f8fa;
+      color: #222;
+    }
+    .top-nav {
+      margin-bottom: 20px;
+    }
+    .top-nav a {
+      margin-right: 12px;
+    }
+    .alerta-ok {
+      background: #e6f4ea;
+      color: #1e6f31;
+      border-left: 4px solid #2e7d32;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+    }
+    .alerta-aviso {
+      background: #fff4e5;
+      color: #9a4a00;
+      border-left: 4px solid #ed6c02;
+      padding: 10px 12px;
+      margin-bottom: 16px;
+    }
+    .reservas-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
+    }
+    .reserva-card {
+      background: #fff;
+      border: 1px solid #dcdcdc;
+      border-left: 5px solid #64748b;
+      border-radius: 8px;
+      padding: 14px 16px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
+    .reserva-card.aprovada {
+      border-left-color: #2e7d32;
+    }
+    .reserva-card.pendente {
+      border-left-color: #ed6c02;
+    }
+    .reserva-card.recusada,
+    .reserva-card.cancelada {
+      border-left-color: #c62828;
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+    .sala-nome {
+      font-size: 16px;
+      font-weight: bold;
+    }
+    .badge {
+      font-size: 12px;
+      font-weight: bold;
+      padding: 3px 8px;
+      border-radius: 999px;
+    }
+    .badge.aprovada {
+      background: #e6f4ea;
+      color: #1e6f31;
+    }
+    .badge.pendente {
+      background: #fff4e5;
+      color: #9a4a00;
+    }
+    .badge.recusada,
+    .badge.cancelada {
+      background: #fdecea;
+      color: #a51d24;
+    }
+    .meta {
+      font-size: 14px;
+      color: #444;
+      margin: 4px 0;
+    }
+    .atividade {
+      margin-top: 8px;
+      font-size: 14px;
+      color: #111;
+    }
+    .acoes {
+      margin-top: 12px;
+    }
+    .btn-cancelar {
+      background: #fff;
+      color: #b71c1c;
+      border: 1px solid #c62828;
+      border-radius: 6px;
+      padding: 6px 10px;
+      font-size: 13px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .btn-cancelar:hover {
+      background: #fdecea;
+    }
+  </style>
+</head>
+<body>
+  <h1>Minhas Reservas</h1>
+
+  <div class="top-nav">
+    <a href="{% url 'lista_salas' %}">Salas</a>
+    <a href="{% url 'solicitar_reserva' %}">Solicitar reserva</a>
+  </div>
+
+  {% if messages %}
+    {% for m in messages %}
+      {% if forloop.last %}
+        <div class="{% if m.tags == 'success' %}alerta-ok{% else %}alerta-aviso{% endif %}">
+          {{ m }}
+        </div>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  {% if reservas %}
+    <div class="reservas-grid">
+      {% for reserva in reservas %}
+        {% with st=reserva.status|lower %}
+          <div class="reserva-card {{ st }}">
+            <div class="card-header">
+              <span class="sala-nome">{{ reserva.sala.nome }}</span>
+              <span class="badge {{ st }}">{{ reserva.get_status_display }}</span>
+            </div>
+            <div class="meta">
+              <strong>Data:</strong> {{ reserva.data|date:"d/m/Y" }}
+            </div>
+            <div class="meta">
+              <strong>Horário:</strong> {{ reserva.hora_inicio|time:"H:i" }} às {{ reserva.hora_fim|time:"H:i" }}
+            </div>
+            <div class="meta">
+              <strong>Tipo:</strong> {{ reserva.get_tipo_reserva_display }}
+            </div>
+            <div class="atividade">
+              <strong>Atividade:</strong> {{ reserva.atividade }}
+            </div>
+            {% if reserva.status == 'APROVADA' or reserva.status == 'PENDENTE' %}
+              <div class="acoes">
+                <form method="post" action="{% url 'cancelar_reserva' reserva.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-cancelar">Cancelar reserva</button>
+                </form>
+              </div>
+            {% elif reserva.status == 'RECUSADA' %}
+              <div class="acoes">
+                <form method="post" action="{% url 'excluir_reserva' reserva.id %}">
+                  {% csrf_token %}
+                  <button type="submit" class="btn-cancelar">Excluir reserva</button>
+                </form>
+              </div>
+            {% endif %}
+          </div>
+        {% endwith %}
+      {% endfor %}
+    </div>
+  {% else %}
+    <p>Ainda não há reservas registradas.</p>
+  {% endif %}
+</body>
+</html>

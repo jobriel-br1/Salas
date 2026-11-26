@@ -1,0 +1,28 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Criar conta - Poli-Salas</title>
+    <link rel="stylesheet" href="{% static 'style-login.css' %}">
+</head>
+<body>
+    <main class="container-login">
+        <header class="login-header">
+            <h1>Poli-Salas</h1>
+            <p>Criar conta / Vincular USP</p>
+        </header>
+
+        <form method="post" class="form-login">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="botao-login">Cadastrar</button>
+        </form>
+
+        <nav class="opcoes">
+            <a href="{% url 'login' %}">Voltar ao login</a>
+        </nav>
+    </main>
+</body>
+</html>

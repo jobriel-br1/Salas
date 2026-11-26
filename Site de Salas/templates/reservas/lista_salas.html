@@ -5,6 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Salas - Poli-Salas</title>
+    <link rel="stylesheet" href="{% static 'style-lista-salas.css' %}">
+    <!-- Sem defer: aplica o tema salvo antes da página aparecer -->
+    <script src="{% static 'lista-salas.js' %}"></script>
 </head>
 <body>
     <header>
@@ -16,6 +19,9 @@
                 <a href="{% url 'cadastrar_sala' %}">+ Nova sala</a>
                 <a href="{% url 'gerenciar_reservas' %}">Gerenciar reservas</a>
             {% endif %}
+
+            <button type="button" id="botao-tema" class="botao-tema" aria-label="Alternar tema"></button>
+
             <form method="post" action="{% url 'logout' %}" style="display:inline;">
                 {% csrf_token %}
                 <button type="submit">Sair</button>

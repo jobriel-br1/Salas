@@ -1,0 +1,310 @@
+/* =========================
+   1. VARIÁVEIS DE TEMA
+   ========================= */
+
+/* Tema escuro (padrão) */
+:root {
+    color-scheme: dark;
+
+    --cor-fundo: #141F1E;
+    --cor-superficie: #1D2D2C;
+    --cor-superficie-alta: #243736;
+    --cor-primaria: #29403F;
+    --cor-hover: #365553;
+    --cor-borda: #34504E;
+
+    --cor-destaque: #D9CCB7;
+    --cor-texto: #ECE6DA;
+    --cor-texto-suave: #A9A296;
+    --cor-texto-sobre-destaque: #1A2A29;
+    --cor-texto-sobre-hover: #ECE6DA;
+
+    --sombra: none;
+}
+
+/* Tema claro (ativado pelo botão) */
+:root[data-theme="light"] {
+    color-scheme: light;
+
+    --cor-fundo: #F5F2ED;
+    --cor-superficie: #FFFFFF;
+    --cor-superficie-alta: #FAF7F2;
+    --cor-primaria: #29403F;
+    --cor-hover: #365553;
+    --cor-borda: #D8D8D3;
+
+    --cor-destaque: #29403F;
+    --cor-texto: #343A38;
+    --cor-texto-suave: #6B706D;
+    --cor-texto-sobre-destaque: #FFFFFF;
+    --cor-texto-sobre-hover: #FFFFFF;
+
+    --sombra: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================
+   2. CONFIGURAÇÕES GERAIS
+   ========================= */
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+
+    transition:
+        background-color 0.25s,
+        color 0.25s;
+}
+
+/* =========================
+   3. CABEÇALHO
+   ========================= */
+
+header {
+    padding: 18px 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    background-color: var(--cor-superficie);
+    border-bottom: 1px solid var(--cor-borda);
+
+    transition:
+        background-color 0.25s,
+        border-color 0.25s;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cor-texto);
+}
+
+/* =========================
+   4. NAVEGAÇÃO
+   ========================= */
+
+nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+nav a {
+    padding: 8px 14px;
+
+    border-radius: 6px;
+
+    color: var(--cor-destaque);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s;
+}
+
+nav a:hover {
+    background-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+/* Botão Sair */
+nav form button {
+    padding: 8px 16px;
+
+    border: 1px solid var(--cor-destaque);
+    border-radius: 6px;
+
+    background-color: transparent;
+    color: var(--cor-destaque);
+
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
+
+nav form button:hover {
+    background-color: var(--cor-destaque);
+    color: var(--cor-texto-sobre-destaque);
+}
+
+nav form button:active {
+    transform: scale(0.97);
+}
+
+/* Botão de alternar tema (sol / lua) */
+.botao-tema {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+
+    background-color: transparent;
+    color: var(--cor-destaque);
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        border-color 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
+
+.botao-tema:hover {
+    background-color: var(--cor-hover);
+    border-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+.botao-tema:active {
+    transform: scale(0.95);
+}
+
+/* =========================
+   5. CONTEÚDO PRINCIPAL
+   ========================= */
+
+main {
+    width: 100%;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+main h2 {
+    margin: 0 0 24px;
+
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--cor-destaque);
+}
+
+/* =========================
+   6. LISTA DE SALAS
+   ========================= */
+
+main ul {
+    margin: 0;
+    padding: 0;
+
+    list-style: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+main li {
+    padding: 16px 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    background-color: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 10px;
+    box-shadow: var(--sombra);
+
+    font-size: 16px;
+    color: var(--cor-texto);
+
+    transition:
+        background-color 0.2s,
+        border-color 0.2s;
+}
+
+main li:hover {
+    background-color: var(--cor-superficie-alta);
+    border-color: var(--cor-hover);
+}
+
+main li a {
+    flex-shrink: 0;
+    padding: 8px 14px;
+
+    border-radius: 6px;
+
+    background-color: var(--cor-destaque);
+    color: var(--cor-texto-sobre-destaque);
+
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s;
+}
+
+main li a:hover {
+    background-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+/* =========================
+   7. ACESSIBILIDADE
+   ========================= */
+
+nav a:focus-visible,
+nav form button:focus-visible,
+.botao-tema:focus-visible,
+main li a:focus-visible {
+    outline: 2px solid var(--cor-destaque);
+    outline-offset: 3px;
+}
+
+/* =========================
+   8. RESPONSIVIDADE
+   ========================= */
+
+@media (max-width: 600px) {
+    header {
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    main {
+        padding: 28px 16px;
+    }
+
+    main li {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

@@ -16,13 +16,34 @@
 
         <form method="post" class="form-login">
             {% csrf_token %}
-            {{ form.as_p }}
+
+            {% if form.non_field_errors %}
+                <div class="erro">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="campo">
+                    {{ field.label_tag }}
+                    {{ field }}
+
+                    {% if field.help_text %}
+                        <div class="ajuda">{{ field.help_text|safe }}</div>
+                    {% endif %}
+
+                    {% for erro in field.errors %}
+                        <span class="erro">{{ erro }}</span>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+
             <button type="submit" class="botao-login">Cadastrar</button>
         </form>
 
         <nav class="opcoes">
             <a href="{% url 'login' %}">Voltar ao login</a>
         </nav>
+
+        <script src="{% static 'toggle-senha.js' %}"></script>
     </main>
 </body>
 </html>

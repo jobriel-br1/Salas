@@ -50,7 +50,55 @@
         <form method="post" class="form-reserva">
             {% csrf_token %}
             {% if form %}
-                {{ form.as_p }}
+                {% if form.sala %}
+                    <p>
+                        {{ form.sala.label_tag }}
+                        {{ form.sala }}
+                    </p>
+                {% endif %}
+                {% if form.tipo_reserva %}
+                    <p>
+                        {{ form.tipo_reserva.label_tag }}
+                        {{ form.tipo_reserva }}
+                    </p>
+                {% endif %}
+                {% if form.data %}
+                    <p>
+                        {{ form.data.label_tag }}
+                        {{ form.data }}
+                    </p>
+                {% endif %}
+
+                <p>
+                    <label for="id_hora_inicio">Horário de início:</label>
+                    <select name="hora_inicio" id="id_hora_inicio" required>
+                        {% for b in blocos_horario %}
+                            <option value="{{ b.inicio }}" data-fim="{{ b.fim }}"
+                                {% if form.hora_inicio.value == b.inicio %}selected{% endif %}>
+                                {{ b.label_inicio }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </p>
+
+                <p>
+                    <label for="id_hora_fim">Horário de término:</label>
+                    <select name="hora_fim" id="id_hora_fim" required>
+                        {% for b in blocos_horario %}
+                            <option value="{{ b.fim }}"
+                                {% if form.hora_fim.value == b.fim %}selected{% endif %}>
+                                {{ b.label_fim }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                </p>
+
+                {% if form.atividade %}
+                    <p>
+                        {{ form.atividade.label_tag }}
+                        {{ form.atividade }}
+                    </p>
+                {% endif %}
             {% else %}
                 <p>
                     <label for="id_sala">Sala:</label>
@@ -65,12 +113,20 @@
                     <input type="date" name="data" id="id_data" required>
                 </p>
                 <p>
-                    <label for="id_hora_inicio">Hora de início:</label>
-                    <input type="time" name="hora_inicio" id="id_hora_inicio" required>
+                    <label for="id_hora_inicio">Horário de início:</label>
+                    <select name="hora_inicio" id="id_hora_inicio" required>
+                        {% for b in blocos_horario %}
+                            <option value="{{ b.inicio }}" data-fim="{{ b.fim }}">{{ b.label_inicio }}</option>
+                        {% endfor %}
+                    </select>
                 </p>
                 <p>
-                    <label for="id_hora_fim">Hora de término:</label>
-                    <input type="time" name="hora_fim" id="id_hora_fim" required>
+                    <label for="id_hora_fim">Horário de término:</label>
+                    <select name="hora_fim" id="id_hora_fim" required>
+                        {% for b in blocos_horario %}
+                            <option value="{{ b.fim }}">{{ b.label_fim }}</option>
+                        {% endfor %}
+                    </select>
                 </p>
                 <p>
                     <label for="id_atividade">Atividade:</label>
@@ -80,5 +136,25 @@
             <button type="submit" class="botao-enviar">Enviar solicitação</button>
         </form>
     </main>
+
+    <script>
+    (function () {
+        const inicioSelect = document.getElementById('id_hora_inicio');
+        const fimSelect = document.getElementById('id_hora_fim');
+        if (!inicioSelect || !fimSelect) return;
+
+        function sincronizarFim() {
+            const opt = inicioSelect.options[inicioSelect.selectedIndex];
+            if (opt && opt.dataset.fim) {
+                fimSelect.value = opt.dataset.fim;
+            }
+        }
+
+        inicioSelect.addEventListener('change', sincronizarFim);
+        if (!fimSelect.value) {
+            sincronizarFim();
+        }
+    })();
+    </script>
 </body>
 </html>

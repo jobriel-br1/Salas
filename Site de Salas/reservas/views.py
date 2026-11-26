@@ -25,6 +25,10 @@ def bloquear_horario(request):
     motivo = (request.POST.get('atividade') or 'Bloqueio administrativo').strip()
     recusar_conflitos = request.POST.get('recusar_conflitos') == 'on'
 
+    if not sala_id:
+        messages.error(request, "Selecione uma sala para bloquear.")
+        return redirect('gerenciar_reservas')
+
     sala = get_object_or_404(Sala, id=sala_id)
 
     try:
@@ -67,7 +71,7 @@ def bloquear_horario(request):
                 ):
                     outra.status = 'RECUSADA'
                     outra.save(update_fields=['status'])
-                    rejeitadas += 1
+                    recusadas += 1
 
     msg = (
         f"Horário bloqueado na sala {sala.nome} em {data_obj.strftime('%d/%m/%Y')} "
@@ -190,19 +194,27 @@ def _eh_funcionario(user) -> bool:
 @login_required
 def gerenciar_reservas(request):
     if not _eh_funcionario(request.user):
-        raise PermissionDenied("Apenas funcionários podem acessar esta página.")
+        raise PermissionDenied("Apenas funcionários podem acessar o gerenciamento de reservas.")
 
-    reservas_pendentes = (
+    reservas = (
         Reserva.objects.filter(status='PENDENTE')
         .select_related('sala', 'solicitante')
-        .order_by('data', 'hora_inicio', 'criado_em')
+        .order_by('data', 'hora_inicio')
     )
+    reservas_gerenciaveis = (
+        Reserva.objects.exclude(status='PENDENTE')
+        .select_related('sala', 'solicitante')
+        .order_by('-data', '-hora_inicio')
+    )
+    salas = Sala.objects.order_by('nome')
 
-    return render(
-        request,
-        'reservas/gerenciar_reservas.html',
-        {'reservas': reservas_pendentes},
-    )
+    context = {
+        'reservas': reservas,
+        'reservas_gerenciaveis': reservas_gerenciaveis,
+        'salas': salas,
+        'eh_funcionario': True,
+    }
+    return render(request, 'reservas/gerenciar_reservas.html', context)
 
 
 
@@ -221,6 +233,16 @@ BLOCOS_HORARIO = [
     (time(15, 50), time(16, 40)),
     (time(16, 50), time(17, 40)),
     (time(17, 40), time(18, 30)),
+]
+
+OPCOES_INICIO = [
+    (inicio.strftime('%H:%M'), inicio.strftime('%H:%M'))
+    for inicio, _ in BLOCOS_HORARIO
+]
+
+OPCOES_FIM = [
+    (fim.strftime('%H:%M'), fim.strftime('%H:%M'))
+    for _, fim in BLOCOS_HORARIO
 ]
 
 
@@ -369,6 +391,16 @@ def _converter_hora(valor) -> time:
 
 @login_required
 def solicitar_reserva(request):
+    blocos_formatados = [
+        {
+            'inicio': inicio.strftime('%H:%M'),
+            'fim': fim.strftime('%H:%M'),
+            'label_inicio': inicio.strftime('%H:%M'),
+            'label_fim': fim.strftime('%H:%M'),
+        }
+        for inicio, fim in BLOCOS_HORARIO
+    ]
+
     if request.method == 'POST':
         form = ReservaForm(request.POST)
         if form.is_valid():
@@ -379,6 +411,14 @@ def solicitar_reserva(request):
             hora_inicio = _converter_hora(dados['hora_inicio'])
             hora_fim = _converter_hora(dados['hora_fim'])
             atividade = dados['atividade']
+
+            if hora_fim <= hora_inicio:
+                messages.error(request, "O horário de término deve ser maior que o horário de início.")
+                return render(
+                    request,
+                    'reservas/solicitar_reserva.html',
+                    {'form': form, 'blocos_horario': blocos_formatados},
+                )
 
             if tipo == 'SEMESTRAL':
                 data_limite = _fim_do_semestre(data_inicial)
@@ -408,7 +448,11 @@ def solicitar_reserva(request):
                         request,
                         f"O horário em {d.strftime('%d/%m/%Y')} está bloqueado pela administração."
                     )
-                    return render(request, 'reservas/solicitar_reserva.html', {'form': form})
+                    return render(
+                        request,
+                        'reservas/solicitar_reserva.html',
+                        {'form': form, 'blocos_horario': blocos_formatados},
+                    )
 
                 if conflitos_dia:
                     messages.warning(
@@ -452,7 +496,11 @@ def solicitar_reserva(request):
             initial['hora_inicio'] = request.GET.get('hora')
         form = ReservaForm(initial=initial)
 
-    return render(request, 'reservas/solicitar_reserva.html', {'form': form})
+    return render(
+        request,
+        'reservas/solicitar_reserva.html',
+        {'form': form, 'blocos_horario': blocos_formatados},
+    )
 
 
 @login_required
@@ -518,24 +566,3 @@ def avaliar_solicitacoes(request):
     return render(request, 'reservas/avaliar_solicitacoes.html', {'pendentes': pendentes})
 
 
-@login_required
-def bloquear_horario(request, sala_id):
-    if not request.user.is_funcionario:
-        return redirect('lista_salas')
-
-    sala = get_object_or_404(Sala, id=sala_id)
-    if request.method == 'POST':
-        data = request.POST.get('data')
-        hora = datetime.strptime(request.POST.get('hora'), '%H:%M').time()
-        Reserva.objects.update_or_create(
-            sala=sala,
-            data=data,
-            hora_inicio=hora,
-            defaults={
-                'solicitante': request.user,
-                'atividade': 'Bloqueado',
-                'status': 'BLOQUEADA'
-            }
-        )
-        messages.success(request, f"Horário {hora.strftime('%H:%M')} bloqueado na sala {sala.nome}.")
-    return redirect('calendario_sala', sala_id=sala.id)

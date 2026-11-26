@@ -207,17 +207,18 @@ def gerenciar_reservas(request):
 
 
 BLOCOS_HORARIO = [
-    (time(8, 0), time(9, 0)),
-    (time(9, 0), time(10, 0)),
-    (time(10, 0), time(11, 0)),
-    (time(11, 0), time(12, 0)),
-    (time(13, 0), time(14, 0)),
-    (time(14, 0), time(15, 0)),
-    (time(15, 0), time(16, 0)),
-    (time(16, 0), time(17, 0)),
-    (time(17, 0), time(18, 0)),
-    (time(18, 0), time(19, 0)),
-    (time(19, 0), time(20, 0)),
+    (time(7, 30), time(8, 20)),
+    (time(8, 20), time(9, 10)),
+    (time(9, 20), time(10, 10)),
+    (time(10, 10), time(11, 0)),
+    (time(11, 10), time(12, 0)),
+    (time(12, 0), time(12, 50)),
+    (time(13, 10), time(14, 0)),
+    (time(14, 0), time(14, 50)),
+    (time(15, 0), time(15, 50)),
+    (time(15, 50), time(16, 40)),
+    (time(16, 50), time(17, 40)),
+    (time(17, 40), time(18, 30)),
 ]
 
 

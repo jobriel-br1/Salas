@@ -9,7 +9,7 @@ urlpatterns = [
     path('logout/', auth_views.LogoutView.as_view(), name='logout'),
     path('cadastro/', views.cadastro, name='cadastro'),
     
-    path('', views.lista_salas, name='lista_salas'),
+    path('alocacao-salas/', views.lista_salas, name='lista_salas'),
     path('sala/<int:sala_id>/calendario/', views.calendario_sala, name='calendario_sala'),
     path('reservar/', views.solicitar_reserva, name='solicitar_reserva'),
     path('minhas-reservas/', views.minhas_reservas, name='minhas_reservas'),

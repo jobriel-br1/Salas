@@ -5,22 +5,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Solicitar Reserva - Poli-Salas</title>
-    <style>
-        .alerta-erro {
-            background-color: #fdecea;
-            color: #b71c1c;
-            border-left: 4px solid #b71c1c;
-            padding: 10px 12px;
-            margin-bottom: 12px;
-        }
-        .alerta-info {
-            background-color: #eef6ff;
-            color: #0d47a1;
-            border-left: 4px solid #1976d2;
-            padding: 10px 12px;
-            margin-bottom: 12px;
-        }
-    </style>
+    <link rel="stylesheet" href="{% static 'reserva-sala.css' %}">
+    <!-- Sem defer: aplica o tema salvo antes da página aparecer -->
+    <script src="{% static 'reserva-sala.js' %}"></script>
 </head>
 <body>
     <header>
@@ -31,6 +18,8 @@
             {% if request.user.is_authenticated and request.user.funcao == 'FUNCIONARIO' %}
                 <a href="{% url 'gerenciar_reservas' %}">Gerenciar reservas</a>
             {% endif %}
+
+            <button type="button" id="botao-tema" class="botao-tema" aria-label="Alternar tema"></button>
         </nav>
     </header>
 
@@ -58,7 +47,7 @@
             </div>
         {% endif %}
 
-        <form method="post">
+        <form method="post" class="form-reserva">
             {% csrf_token %}
             {% if form %}
                 {{ form.as_p }}
@@ -88,7 +77,7 @@
                     <input type="text" name="atividade" id="id_atividade" placeholder="Ex: Aula 1, Evento" required>
                 </p>
             {% endif %}
-            <button type="submit">Enviar solicitação</button>
+            <button type="submit" class="botao-enviar">Enviar solicitação</button>
         </form>
     </main>
 </body>

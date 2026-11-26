@@ -1,0 +1,349 @@
+/* =========================
+   1. VARIÁVEIS DE TEMA
+   ========================= */
+
+/* Tema escuro (padrão) */
+:root {
+    color-scheme: dark;
+
+    --cor-fundo: #141F1E;
+    --cor-superficie: #1D2D2C;
+    --cor-campo: #121C1B;
+    --cor-primaria: #29403F;
+    --cor-hover: #365553;
+    --cor-borda: #34504E;
+
+    --cor-destaque: #D9CCB7;
+    --cor-texto: #ECE6DA;
+    --cor-texto-suave: #A9A296;
+    --cor-texto-sobre-destaque: #1A2A29;
+    --cor-texto-sobre-hover: #ECE6DA;
+    --cor-foco: rgba(217, 204, 183, 0.25);
+
+    --erro-texto: #FFB4A8;
+
+    --sombra: none;
+}
+
+/* Tema claro (ativado pelo botão) */
+:root[data-theme="light"] {
+    color-scheme: light;
+
+    --cor-fundo: #F5F2ED;
+    --cor-superficie: #FFFFFF;
+    --cor-campo: #FAF8F4;
+    --cor-primaria: #29403F;
+    --cor-hover: #365553;
+    --cor-borda: #D8D8D3;
+
+    --cor-destaque: #29403F;
+    --cor-texto: #343A38;
+    --cor-texto-suave: #6B706D;
+    --cor-texto-sobre-destaque: #FFFFFF;
+    --cor-texto-sobre-hover: #FFFFFF;
+    --cor-foco: rgba(41, 64, 63, 0.2);
+
+    --erro-texto: #B71C1C;
+
+    --sombra: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================
+   2. CONFIGURAÇÕES GERAIS
+   ========================= */
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+
+    transition:
+        background-color 0.25s,
+        color 0.25s;
+}
+
+/* =========================
+   3. CABEÇALHO
+   ========================= */
+
+header {
+    padding: 18px 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    background-color: var(--cor-superficie);
+    border-bottom: 1px solid var(--cor-borda);
+
+    transition:
+        background-color 0.25s,
+        border-color 0.25s;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cor-texto);
+}
+
+/* =========================
+   4. NAVEGAÇÃO
+   ========================= */
+
+nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+nav a {
+    padding: 8px 14px;
+
+    border-radius: 6px;
+
+    color: var(--cor-destaque);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s;
+}
+
+nav a:hover {
+    background-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+/* Botão de alternar tema (sol / lua) */
+.botao-tema {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+
+    background-color: transparent;
+    color: var(--cor-destaque);
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        border-color 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
+
+.botao-tema:hover {
+    background-color: var(--cor-hover);
+    border-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+.botao-tema:active {
+    transform: scale(0.95);
+}
+
+/* =========================
+   5. CONTEÚDO PRINCIPAL
+   ========================= */
+
+main {
+    width: 100%;
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 40px 24px;
+}
+
+/* =========================
+   6. FORMULÁRIO
+   ========================= */
+
+.form-sala {
+    padding: 28px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+
+    background-color: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    box-shadow: var(--sombra);
+}
+
+/* Cada campo (o form.as_p gera um <p> por campo) */
+.form-sala p {
+    margin: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-sala label {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--cor-texto);
+}
+
+.form-sala input,
+.form-sala select,
+.form-sala textarea {
+    width: 100%;
+    min-width: 0;
+    padding: 0 12px;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+
+    background-color: var(--cor-campo);
+    color: var(--cor-texto);
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.form-sala input,
+.form-sala select {
+    height: 44px;
+}
+
+.form-sala textarea {
+    min-height: 100px;
+    padding: 10px 12px;
+    resize: vertical;
+}
+
+.form-sala input::placeholder,
+.form-sala textarea::placeholder {
+    color: var(--cor-texto-suave);
+}
+
+.form-sala input:focus,
+.form-sala select:focus,
+.form-sala textarea:focus {
+    border-color: var(--cor-destaque);
+    box-shadow: 0 0 0 3px var(--cor-foco);
+}
+
+/* Checkbox: não herda o tamanho dos outros campos */
+.form-sala input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    padding: 0;
+
+    accent-color: var(--cor-destaque);
+    cursor: pointer;
+}
+
+/* Textos de ajuda e erros gerados pelo Django */
+.form-sala .helptext {
+    font-size: 13px;
+    line-height: 1.4;
+    color: var(--cor-texto-suave);
+}
+
+.form-sala .errorlist {
+    margin: 0;
+    padding-left: 18px;
+
+    font-size: 13px;
+    color: var(--erro-texto);
+}
+
+/* =========================
+   7. BOTÃO SALVAR
+   ========================= */
+
+.botao-enviar {
+    width: 100%;
+    min-height: 46px;
+    padding: 12px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: var(--cor-destaque);
+    color: var(--cor-texto-sobre-destaque);
+
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
+
+.botao-enviar:hover {
+    background-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+.botao-enviar:active {
+    transform: scale(0.98);
+}
+
+/* =========================
+   8. ACESSIBILIDADE
+   ========================= */
+
+nav a:focus-visible,
+.botao-tema:focus-visible,
+.botao-enviar:focus-visible {
+    outline: 2px solid var(--cor-destaque);
+    outline-offset: 3px;
+}
+
+/* =========================
+   9. RESPONSIVIDADE
+   ========================= */
+
+@media (max-width: 600px) {
+    header {
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    main {
+        padding: 28px 16px;
+    }
+
+    .form-sala {
+        padding: 20px;
+    }
+}

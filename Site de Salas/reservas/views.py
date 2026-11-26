@@ -299,15 +299,16 @@ def calendario_sala(request, sala_id):
         })
 
     context = {
-        'salas': Sala.objects.order_by('nome'),
-        'dias_semana': dias_semana,
-        'linhas': linhas,
-        'semana_anterior': (inicio_semana - timedelta(days=7)).isoformat(),
-        'semana_seguinte': (inicio_semana + timedelta(days=7)).isoformat(),
-        'inicio_semana': inicio_semana,
-        'fim_semana': fim_semana,
+    'sala': sala,        # <- chave 'sala' (texto), valor sala (o objeto)
+    'salas': Sala.objects.order_by('nome'),
+    'dias_semana': dias_semana,
+    'linhas': linhas,
+    'semana_anterior': (inicio_semana - timedelta(days=7)).isoformat(),
+    'semana_seguinte': (inicio_semana + timedelta(days=7)).isoformat(),
+    'inicio_semana': inicio_semana,
+    'fim_semana': fim_semana,
     }
-    return render(request, 'reservas/gerenciar_reservas.html', context)
+    return render(request, 'reservas/calendario_sala.html', context)
 
 
 

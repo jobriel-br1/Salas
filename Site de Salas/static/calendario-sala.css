@@ -1,0 +1,514 @@
+/* =========================
+   1. VARIÁVEIS DE TEMA
+   ========================= */
+
+/* Tema escuro (padrão) */
+:root {
+    color-scheme: dark;
+
+    --cor-fundo: #141F1E;
+    --cor-superficie: #1D2D2C;
+    --cor-superficie-alta: #243736;
+    --cor-primaria: #29403F;
+    --cor-hover: #365553;
+    --cor-borda: #34504E;
+
+    --cor-destaque: #D9CCB7;
+    --cor-texto: #ECE6DA;
+    --cor-texto-suave: #A9A296;
+    --cor-texto-sobre-destaque: #1A2A29;
+    --cor-texto-sobre-hover: #ECE6DA;
+
+    /* Estados das células */
+    --vago-fundo: #1B3324;
+    --vago-texto: #A5D6A7;
+    --aprovada-fundo: #1F3340;
+    --aprovada-texto: #A9D0F5;
+    --pendente-fundo: #3D2E17;
+    --pendente-texto: #FFCC80;
+    --bloqueado-fundo: #3A1F1F;
+    --bloqueado-texto: #FFB4A8;
+
+    --btn-remover: #3B5654;
+
+    --sombra: none;
+}
+
+/* Tema claro (ativado pelo botão) */
+:root[data-theme="light"] {
+    color-scheme: light;
+
+    --cor-fundo: #F5F2ED;
+    --cor-superficie: #FFFFFF;
+    --cor-superficie-alta: #FAF7F2;
+    --cor-primaria: #29403F;
+    --cor-hover: #365553;
+    --cor-borda: #D8D8D3;
+
+    --cor-destaque: #29403F;
+    --cor-texto: #343A38;
+    --cor-texto-suave: #6B706D;
+    --cor-texto-sobre-destaque: #FFFFFF;
+    --cor-texto-sobre-hover: #FFFFFF;
+
+    --vago-fundo: #E8F5E9;
+    --vago-texto: #1B5E20;
+    --aprovada-fundo: #E3F2FD;
+    --aprovada-texto: #0D47A1;
+    --pendente-fundo: #FFF8E1;
+    --pendente-texto: #E65100;
+    --bloqueado-fundo: #FFEBEE;
+    --bloqueado-texto: #B71C1C;
+
+    --btn-remover: #4A5B59;
+
+    --sombra: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* =========================
+   2. CONFIGURAÇÕES GERAIS
+   ========================= */
+
+* {
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+html,
+body {
+    margin: 0;
+    min-height: 100%;
+}
+
+body {
+    min-height: 100vh;
+    min-height: 100dvh;
+
+    background-color: var(--cor-fundo);
+    color: var(--cor-texto);
+
+    transition:
+        background-color 0.25s,
+        color 0.25s;
+}
+
+/* =========================
+   3. CABEÇALHO
+   ========================= */
+
+header {
+    padding: 18px 32px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 16px;
+
+    background-color: var(--cor-superficie);
+    border-bottom: 1px solid var(--cor-borda);
+
+    transition:
+        background-color 0.25s,
+        border-color 0.25s;
+}
+
+header h1 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 700;
+    color: var(--cor-texto);
+}
+
+/* =========================
+   4. NAVEGAÇÃO
+   ========================= */
+
+nav {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+nav a {
+    padding: 8px 14px;
+
+    border-radius: 6px;
+
+    color: var(--cor-destaque);
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s;
+}
+
+nav a:hover {
+    background-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+/* Botão de alternar tema (sol / lua) */
+.botao-tema {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+
+    background-color: transparent;
+    color: var(--cor-destaque);
+
+    cursor: pointer;
+
+    transition:
+        background-color 0.2s,
+        border-color 0.2s,
+        color 0.2s,
+        transform 0.2s;
+}
+
+.botao-tema:hover {
+    background-color: var(--cor-hover);
+    border-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+.botao-tema:active {
+    transform: scale(0.95);
+}
+
+/* =========================
+   5. CONTEÚDO PRINCIPAL
+   ========================= */
+
+main {
+    width: 100%;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 32px 24px;
+}
+
+/* Informações da sala + navegação de semana */
+.barra-semana {
+    margin-bottom: 20px;
+
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.info-sala {
+    margin: 0;
+
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--cor-texto-suave);
+}
+
+.info-sala strong {
+    color: var(--cor-texto);
+}
+
+.nav-semana {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.nav-semana a {
+    padding: 8px 14px;
+
+    border: 1px solid var(--cor-borda);
+    border-radius: 6px;
+
+    background-color: var(--cor-superficie);
+    color: var(--cor-destaque);
+
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+
+    transition:
+        background-color 0.2s,
+        color 0.2s,
+        border-color 0.2s;
+}
+
+.nav-semana a:hover {
+    background-color: var(--cor-hover);
+    border-color: var(--cor-hover);
+    color: var(--cor-texto-sobre-hover);
+}
+
+/* =========================
+   6. LEGENDA
+   ========================= */
+
+.legenda {
+    margin-bottom: 18px;
+
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+
+    font-size: 13px;
+    color: var(--cor-texto-suave);
+}
+
+.badge {
+    display: inline-block;
+    padding: 3px 10px;
+
+    border-radius: 999px;
+
+    background-color: var(--cor-primaria);
+    color: var(--cor-texto);
+
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.badge.vago {
+    background-color: var(--vago-fundo);
+    color: var(--vago-texto);
+}
+
+.badge.aprovada {
+    background-color: var(--aprovada-fundo);
+    color: var(--aprovada-texto);
+}
+
+.badge.pendente {
+    background-color: var(--pendente-fundo);
+    color: var(--pendente-texto);
+}
+
+.badge.bloqueado {
+    background-color: var(--bloqueado-fundo);
+    color: var(--bloqueado-texto);
+}
+
+.badge.indisponivel {
+    background-color: var(--cor-superficie-alta);
+    color: var(--cor-texto-suave);
+    opacity: 0.7;
+}
+
+/* =========================
+   7. TABELA DO CALENDÁRIO
+   ========================= */
+
+.tabela-wrapper {
+    overflow-x: auto;
+
+    background-color: var(--cor-superficie);
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    box-shadow: var(--sombra);
+}
+
+table {
+    width: 100%;
+    min-width: 900px;
+
+    border-collapse: collapse;
+    table-layout: fixed;
+}
+
+th,
+td {
+    padding: 10px;
+
+    border: 1px solid var(--cor-borda);
+
+    vertical-align: top;
+    font-size: 13px;
+}
+
+th {
+    background-color: var(--cor-superficie-alta);
+    color: var(--cor-destaque);
+
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.5;
+}
+
+td.hora {
+    width: 110px;
+
+    background-color: var(--cor-superficie-alta);
+    color: var(--cor-texto);
+
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+/* Estados das células */
+td.vago {
+    background-color: var(--vago-fundo);
+}
+
+td.aprovada {
+    background-color: var(--aprovada-fundo);
+}
+
+td.pendente {
+    background-color: var(--pendente-fundo);
+}
+
+td.bloqueado {
+    background-color: var(--bloqueado-fundo);
+}
+
+td.vago .estado-titulo {
+    color: var(--vago-texto);
+}
+
+td.aprovada .estado-titulo {
+    color: var(--aprovada-texto);
+}
+
+td.pendente .estado-titulo {
+    color: var(--pendente-texto);
+}
+
+td.bloqueado .estado-titulo {
+    color: var(--bloqueado-texto);
+}
+
+.estado-titulo {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 700;
+}
+
+.reserva-item {
+    margin-top: 6px;
+    padding-top: 6px;
+
+    border-top: 1px dashed var(--cor-borda);
+}
+
+.reserva-item:first-of-type {
+    margin-top: 0;
+    padding-top: 0;
+    border-top: none;
+}
+
+.detalhe {
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--cor-texto-suave);
+}
+
+.detalhe strong {
+    color: var(--cor-texto);
+}
+
+/* =========================
+   8. DIAS PASSADOS E HOJE
+   ========================= */
+
+/* Dias que já passaram: apagados, com listras discretas */
+th.passado,
+td.passado {
+    opacity: 0.4;
+    filter: grayscale(0.7);
+}
+
+td.passado {
+    background-image: repeating-linear-gradient(
+        135deg,
+        transparent 0,
+        transparent 8px,
+        rgba(128, 128, 128, 0.12) 8px,
+        rgba(128, 128, 128, 0.12) 16px
+    );
+}
+
+/* Hoje: cabeçalho em destaque e bordas laterais na coluna */
+th.hoje {
+    background-color: var(--cor-destaque);
+    color: var(--cor-texto-sobre-destaque);
+}
+
+td.hoje {
+    border-left: 2px solid var(--cor-destaque);
+    border-right: 2px solid var(--cor-destaque);
+}
+
+/* =========================
+   9. BOTÃO REMOVER
+   ========================= */
+
+.form-remover {
+    margin: 6px 0 0;
+}
+
+.btn-remover {
+    padding: 5px 10px;
+
+    border: none;
+    border-radius: 6px;
+
+    background-color: var(--btn-remover);
+    color: #FFFFFF;
+
+    font-size: 12px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+        opacity 0.2s,
+        transform 0.2s;
+}
+
+.btn-remover:hover {
+    opacity: 0.85;
+}
+
+.btn-remover:active {
+    transform: scale(0.96);
+}
+
+/* =========================
+   10. ACESSIBILIDADE
+   ========================= */
+
+nav a:focus-visible,
+.nav-semana a:focus-visible,
+.botao-tema:focus-visible,
+.btn-remover:focus-visible {
+    outline: 2px solid var(--cor-destaque);
+    outline-offset: 3px;
+}
+
+/* =========================
+   11. RESPONSIVIDADE
+   ========================= */
+
+@media (max-width: 700px) {
+    header {
+        padding: 16px;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    main {
+        padding: 24px 16px;
+    }
+}

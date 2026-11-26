@@ -9,6 +9,8 @@ from django.core.exceptions import PermissionDenied
 from django.views.decorators.http import require_POST
 from django.db import transaction
 
+def index(request):
+    return render(request, 'reservas/index.html')
 
 @login_required
 @require_POST
